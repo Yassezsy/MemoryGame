@@ -2,46 +2,70 @@ body {
     margin: 0;
     height: 100vh;
     overflow: hidden;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
 }
 
 .background {
     position: fixed;
     inset: 0;
-    background-image: url("card_bg.jpg");
+
+    background-color: lightyellow;
     background-size: cover;
     background-position: center;
+
     filter: blur(8px);
-    z-index: -1;
     transform: scale(1.1);
+
+    z-index: -1;
+    background: linear-gradient(135deg, #f952ff 0%, #3B82F6 100%); //bellissimoooooo
 }
 
 .container {
+    width: min(55vw, 450px);
+
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    padding: 10px;
-    background-color: #143d50;
-    margin: 0px auto;
     gap: 10px;
-    border: 1px solid #333;
+
+    padding: 10px;
+
+    background: rgba(255, 255, 255, 0.1);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border: 2px solid white;
+
     border-radius: 15px;
-    width: min(55vw, 450px); //modificatore di dimensione
-    max-width: none;
+
+    box-shadow: 0 8px 32px rgba(255,255,255,0.3);
+
     box-sizing: border-box;
+
 }
 
 .card {
+    width: 100%;
     aspect-ratio: 1 / 1.2;
-    perspective: 200px;
+
+    perspective: 1000px;
     cursor: pointer;
+    border-color:white;
+    border: 2px #333;
+    border-radius: 20px;
+
 }
 
 .inner {
     width: 100%;
     height: 100%;
+
     position: relative;
+
     transition: transform 0.5s;
     transform-style: preserve-3d;
 }
@@ -50,27 +74,18 @@ body {
     transform: rotateY(180deg);
 }
 
-.container div {
-    aspect-ratio: 1 / 1.2;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 5px;
-    background-color: lightblue;
-
-    border: 1px solid #333;
-    border-radius: 15px;
-}
-
-.front, .back {
+.front,
+.back {
     position: absolute;
+
     width: 100%;
     height: 100%;
+
     border-radius: 15px;
-    backface-visibility: hidden;
+    border: 1px solid #333;
+
     object-fit: cover;
+    backface-visibility: hidden;
 }
 
 .back {
