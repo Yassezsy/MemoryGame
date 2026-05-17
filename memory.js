@@ -51,7 +51,7 @@ function createCards() {
         grid.innerHTML += `
             <div class="card" onclick="selectCard(${index})">
                 <div class="inner">
-                    <img class="front" src="back_card.jpg">
+                    <img class="front" src="Assets/back_card.jpg">
                     <img class="back" src="${card.img}">
                 </div>
             </div>
