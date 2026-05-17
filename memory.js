@@ -2,17 +2,52 @@ const ROWS = 4;
 const COLS = 4;
 const GRIDS_N = ROWS * COLS;
 
-const images = [
-    "Temi/Videogiochi/brawl_stars.jpg",
-    "Temi/Videogiochi/fortnite.jpg",
-    "Temi/Videogiochi/moco.jpg",
-    "Temi/Videogiochi/rocket_league.jpg",
-    "Temi/Videogiochi/sakte.jpg",
-    "Temi/Videogiochi/undertale.jpg",
-    "Temi/Videogiochi/geomtry_dash.jpg",
-    "Temi/Videogiochi/roblox.jpg"
-];
+const themes = {
+    Videogiochi: [
+        "Temi/Videogiochi/brawl_stars.jpg",
+        "Temi/Videogiochi/fortnite.jpg",
+        "Temi/Videogiochi/moco.jpg",
+        "Temi/Videogiochi/rocket_league.jpg",
+        "Temi/Videogiochi/sakte.jpg",
+        "Temi/Videogiochi/undertale.jpg",
+        "Temi/Videogiochi/geomtry_dash.jpg",
+        "Temi/Videogiochi/roblox.jpg"
+    ],
 
+    Anime: [
+        "Temi/Anime/aot.jpg",
+        "Temi/Anime/blue_lock.jpg",
+        "Temi/Anime/chainsaw_man.jpg",
+        "Temi/Anime/death_note.jpg",
+        "Temi/Anime/dragon_ball.jpg",
+        "Temi/Anime/jujutsu.jpg",
+        "Temi/Anime/lain.jpg",
+        "Temi/Anime/naruto.jpg"
+    ],
+
+    Cartoni: [
+        "Temi/Cartoni/bluey.jpg",
+        "Temi/Cartoni/doraemon.jpg",
+        "Temi/Cartoni/puffi.jpg",
+        "Temi/Cartoni/rick_morty.jpg",
+        "Temi/Cartoni/Simpson.jpg",
+        "Temi/Cartoni/south_park.jpg",
+        "Temi/Cartoni/spongebob.jpg",
+        "Temi/Cartoni/teen_titans.jpg",
+    ]
+    Cibo: [
+            "Temi/Cibo/burger.jpg",
+            "Temi/Cibo/burger.jpg",
+            //DA MODIFICARE QUESTI SOTTO
+            "Temi/Cartoni/puffi.jpg",
+            "Temi/Cartoni/rick_morty.jpg",
+            "Temi/Cartoni/Simpson.jpg",
+            "Temi/Cartoni/south_park.jpg",
+            "Temi/Cartoni/spongebob.jpg",
+            "Temi/Cartoni/teen_titans.jpg",
+        ]
+
+};
 let cards = [];
 let selectedCards = [];
 
