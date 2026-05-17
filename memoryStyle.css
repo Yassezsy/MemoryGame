@@ -4,9 +4,16 @@ body {
     overflow: hidden;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 
+}
+
+.score {
+    margin-bottom: 20px;
+    font-size: 30px;
+    color: white;
 }
 
 .background {
