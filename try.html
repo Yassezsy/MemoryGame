@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Memory Game</title>
+</head>
+
+<style>
+
+    body {
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .background {
+        position: fixed;
+        inset: 0;
+        background-image: url("card_bg.jpg");
+        background-size: cover;
+        background-position: center;
+        filter: blur(8px);
+        z-index: -1;
+        transform: scale(1.1);
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        padding: 10px;
+        background-color: #143d50;
+        margin: 0px auto;
+        gap: 10px;
+        border: 1px solid #333;
+        border-radius: 15px;
+        width: min(55vw, 450px); //modificatore di dimensione
+        max-width: none;
+        box-sizing: border-box;
+    }
+
+    .card {
+        aspect-ratio: 1 / 1.2;
+        perspective: 200px;
+        cursor: pointer;
+    }
+
+    .inner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transition: transform 0.5s;
+        transform-style: preserve-3d;
+    }
+
+    .card.flipped .inner {
+        transform: rotateY(180deg);
+    }
+
+    .container div {
+        aspect-ratio: 1 / 1.2;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        padding: 5px;
+        background-color: lightblue;
+
+        border: 1px solid #333;
+        border-radius: 15px;
+    }
+
+    .front, .back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 15px;
+        backface-visibility: hidden;
+        object-fit: cover;
+    }
+
+    .back {
+        transform: rotateY(180deg);
+    }
+
+</style>
+
+<body>
+
+<div class="background"></div>
+
+<div id="card_grid" class="container"></div>
+
+<script>
+
+    const ROWS = 4;
+    const COLS = 4;
+    const GRIDS_N = ROWS * COLS;
+
+    const images = [
+        "Temi/Videogiochi/brawl_stars.jpg",
+        "Temi/Videogiochi/fortnite.jpg",
+        "Temi/Videogiochi/moco.jpg",
+        "Temi/Videogiochi/rocket_league.jpg",
+        "Temi/Videogiochi/sakte.jpg",
+        "Temi/Videogiochi/undertale.jpg",
+        "Temi/Videogiochi/geomtry_dash.jpg",
+        "Temi/Videogiochi/roblox.jpg"
+    ];
+
+    let cards = [];
+    let selectedCards = [];
+
+    class Card {
+        constructor(img) {
+            this.img = img;
+            this.found = false;
+        }
+    }
+
+    function insertCardCouple(card) {
+        cards.push(new Card(card));
+        cards.push(new Card(card));
+    }
+
+    function rearrangeCards() {
+        cards.sort(() => Math.random() - 0.5);
+    }
+
+    function generateCards() {
+        cards = [];
+
+        for (let i = 0; i < GRIDS_N / 2; i++) {
+            let img = images[i];
+            insertCardCouple(img);
+        }
+
+        rearrangeCards();
+    }
+
+    function createCards() {
+        const grid = document.getElementById("card_grid");
+        grid.innerHTML = "";
+
+        cards.forEach((card, index) => {
+            grid.innerHTML += `
+                <div class="card" onclick="selectCard(${index})">
+                    <div class="inner">
+                        <img class="front" src="back_card.jpg">
+                        <img class="back" src="${card.img}">
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function hideCardCouple(cardElements, c1, c2, delay = 500) {
+        setTimeout(() => {
+            cardElements[c1.index].classList.remove("flipped");
+            cardElements[c2.index].classList.remove("flipped");
+        }, delay);
+    }
+
+    function cardIsFlipped(card) {
+        return card.classList.contains("flipped");
+    }
+
+    function cardsAreEquals(card1, card2) {
+        return cards[card1.index].img === cards[card2.index].img;
+    }
+
+    function selectCard(index) {
+
+        let cardElements = document.querySelectorAll(".card");
+        let cardEl = cardElements[index];
+
+        if (cardIsFlipped(cardEl)) return;
+
+        cardEl.classList.add("flipped");
+
+        selectedCards.push({ index, card: cards[index] });
+
+        if (selectedCards.length === 2) {
+
+            let a = selectedCards[0];
+            let b = selectedCards[1];
+
+            if (cardsAreEquals(a, b)) {
+                cards[a.index].found = true;
+                cards[b.index].found = true;
+            } else hideCardCouple(cardElements, a, b);
+
+            selectedCards = [];
+        }
+    }
+
+    generateCards();
+    createCards();
+
+</script>
+
+</body>
+</html>
