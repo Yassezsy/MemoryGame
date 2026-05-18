@@ -8,19 +8,21 @@
 
 <body>
     <div class="background"></div>
-    
-    <select id="themeSelect" onchange="changeTheme()">
-        <option value="">-----SCEGLI IL TUO TEMA----</option>
-        <option value="Anime">Anime</option>
-        <option value="Videogiochi">Videogiochi</option>
-        <option value="Cartoni">Cartoni</option>
-        <option value="Cibo">Cibo</option>
-        <option value="Scuola">Scuola</option>
-        <option value="Videogiochi">Videogiochi</option>
-    </select>
 
-    <label class="score">Punteggio: </label>
+    <div class="selectThemeBox">
+        <select id="themeSelect" onchange="chooseTheme()">
+            <option value="">SCEGLI IL TUO TEMA</option>
+            <option value="Anime">Anime</option>
+            <option value="Albums">Albums</option>
+            <option value="Videogiochi">Videogiochi</option>
+            <option value="Cartoni">Cartoni</option>
+            <option value="Cibo">Cibo</option>
+            <option value="Scuola">Scuola</option>
+            <option value="Videogiochi">Videogiochi</option>
+        </select>
+    </div>
 
+    <label class="score" id="scoreLabel">Value</label>
     <div id="card_grid" class="container"></div>
 
     <script src="memory.js" ></script>

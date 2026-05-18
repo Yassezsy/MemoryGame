@@ -2,6 +2,7 @@ const ROWS = 4;
 const COLS = 4;
 const GRIDS_N = ROWS * COLS;
 
+
 const themes = {
     Videogiochi: [
         "Temi/Videogiochi/brawl_stars.jpg",
@@ -13,7 +14,6 @@ const themes = {
         "Temi/Videogiochi/geomtry_dash.jpg",
         "Temi/Videogiochi/roblox.jpg"
     ],
-
     Anime: [
         "Temi/Anime/aot.jpg",
         "Temi/Anime/blue_lock.jpg",
@@ -24,7 +24,6 @@ const themes = {
         "Temi/Anime/lain.jpg",
         "Temi/Anime/naruto.jpg"
     ],
-
     Cartoni: [
         "Temi/Cartoni/bluey.jpg",
         "Temi/Cartoni/doraemon.jpg",
@@ -33,29 +32,79 @@ const themes = {
         "Temi/Cartoni/Simpson.jpg",
         "Temi/Cartoni/south_park.jpg",
         "Temi/Cartoni/spongebob.jpg",
-        "Temi/Cartoni/teen_titans.jpg",
-    ]
+        "Temi/Cartoni/teen_titans.jpg"
+    ],
     Cibo: [
             "Temi/Cibo/burger.jpg",
-            "Temi/Cibo/burger.jpg",
-            //DA MODIFICARE QUESTI SOTTO
-            "Temi/Cartoni/puffi.jpg",
-            "Temi/Cartoni/rick_morty.jpg",
-            "Temi/Cartoni/Simpson.jpg",
-            "Temi/Cartoni/south_park.jpg",
-            "Temi/Cartoni/spongebob.jpg",
-            "Temi/Cartoni/teen_titans.jpg",
-        ]
-
+            "Temi/Cibo/carbonara.jpg",
+            "Temi/Cibo/chocolate_strawberry.jpg",
+            "Temi/Cibo/cous_cous.jpg",
+            "Temi/Cibo/lasagne.jpg",
+            "Temi/Cibo/pizza.jpg",
+            "Temi/Cibo/sushi.jpg",
+            "Temi/Cibo/tiramisu.jpg"
+    ],
+    Albums: [
+        "Temi/Albums/central_cee.jpg",
+        "Temi/Albums/dark_side_of_the_moon.jpg",
+        "Temi/Albums/doja.jpg",
+        "Temi/Albums/doors.jpg",
+        "Temi/Albums/leteralus.jpg",
+        "Temi/Albums/nirvana.jpg",
+        "Temi/Albums/scorpion.jpg",
+        "Temi/Albums/un_verano.png"
+    ],
+    Scuola: [
+        "Temi/Scuola/cartesio.jpg",
+        "Temi/Scuola/goldoni.jpg",
+        "Temi/Scuola/hopital.jpg",
+        "Temi/Scuola/leonardo_da_vinci.jpg",
+        "Temi/Scuola/leopardi.jpg",
+        "Temi/Scuola/macchiavelli.jpg",
+        "Temi/Scuola/napoleone.jpg",
+        "Temi/Scuola/newton.jpg"
+    ]
 };
+
 let cards = [];
 let selectedCards = [];
+let selectedTheme = themes.Videogiochi;
+let SCORE_PER_CARD = 25;
+let score = 0;
 
 class Card {
     constructor(img) {
         this.img = img;
         this.found = false;
     }
+}
+
+function chooseTheme() {
+    let selections = document.getElementById("themeSelect");
+    let selection = selections.value;
+
+    if (selection == "Albums") {
+        selectedTheme = themes.Albums;
+    } else if (selection == "Anime") {
+        selectedTheme = themes.Anime;
+    } else if (selection == "Cartoni") {
+        selectedTheme = themes.Cartoni;
+    } else if (selection == "Cibo") {
+        selectedTheme = themes.Cibo;
+    } else if (selection == "Scuola") {
+        selectedTheme = themes.Scuola;
+    } else if (selection == "Videogiochi") {
+        selectedTheme = themes.Videogiochi;
+    }
+
+    alert("Tema " + selection + " perfettamente impostato!");
+
+   loadCards();
+   createCards();
+}
+
+function emptyLoadedCards() {
+    cards = [];
 }
 
 function insertCardCouple(card) {
@@ -67,11 +116,11 @@ function rearrangeCards() {
     cards.sort(() => Math.random() - 0.5);
 }
 
-function generateCards() {
-    cards = [];
+function loadCards() {
+    emptyLoadedCards();
 
     for (let i = 0; i < GRIDS_N / 2; i++) {
-        let img = images[i];
+        let img = selectedTheme[i];
         insertCardCouple(img);
     }
 
@@ -109,6 +158,14 @@ function cardsAreEquals(card1, card2) {
     return cards[card1.index].img === cards[card2.index].img;
 }
 
+function obtainPoints() {
+    return SCORE_PER_CARD * 2;
+}
+
+function updateScoreLabel() {
+    document.getElementById("scoreLabel").textContent = `Punteggio: ${score}`;
+}
+
 function selectCard(index) {
 
     let cardElements = document.querySelectorAll(".card");
@@ -128,11 +185,11 @@ function selectCard(index) {
         if (cardsAreEquals(a, b)) {
             cards[a.index].found = true;
             cards[b.index].found = true;
+            score += obtainPoints();
+            updateScoreLabel();
         } else hideCardCouple(cardElements, a, b);
 
         selectedCards = [];
     }
 }
 
-generateCards();
-createCards();

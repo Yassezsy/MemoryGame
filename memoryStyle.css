@@ -31,28 +31,84 @@ body {
     background: linear-gradient(135deg, #f952ff 0%, #3B82F6 100%); //bellissimoooooo
 }
 
+.selectThemeBox {
+    position:relative;
+    width:280px;
+}
+
+.selectThemeBox select {
+
+    width:100%;
+    padding:15px 20px;
+
+    border: 1px solid white;
+    outline:none;
+
+    border-radius:18px;
+
+    font-size:18px;
+    font-weight:bold;
+
+    color:white;
+
+    cursor:pointer;
+
+    appearance:none;
+
+    background:
+    linear-gradient(135deg, #f952ff 0%, #3B82F6 100%);
+
+    box-shadow:
+    0 0 20px rgba(59,130,246,0.5),
+    0 0 40px rgba(249,82,255,0.3);
+
+    transition:0.25s;
+}
+
+.selectThemeBox select:hover, .selectThemeBox select:focus {
+
+    transform:scale(1.03);
+    box-shadow:
+        0 0 25px rgba(59,130,246,0.8),
+        0 0 50px rgba(249,82,255,0.5);
+}
+
+.score {
+    padding-top: 15px;
+}
+
+.selectThemeBox::after {
+    position:absolute;
+    right:18px;
+    top:50%;
+    transform:translateY(-50%);
+    color:white;
+    pointer-events:none;
+    font-size:14px;
+}
+
+select option {
+    background: #3B82F6;
+    color: white;
+    text-align-last:center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
 .container {
     width: min(55vw, 450px);
 
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
-
     padding: 10px;
-
     background: rgba(255, 255, 255, 0.1);
-
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-
     border: 2px solid white;
-
     border-radius: 15px;
-
     box-shadow: 0 8px 32px rgba(255,255,255,0.3);
-
     box-sizing: border-box;
-
 }
 
 .card {
