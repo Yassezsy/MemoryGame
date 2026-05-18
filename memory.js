@@ -2,6 +2,21 @@ const ROWS = 4;
 const COLS = 4;
 const GRIDS_N = ROWS * COLS;
 
+let SCORE_PER_CARD = 25;
+let score = 0;
+
+const VOLUME = 0.2;
+
+const SND_CARD_SWIPE = "Assets/Sounds/sndCardSwipe.mp3";
+const SND_CARD_SWIPE_BACK = "Assets/Sounds/sndCardSwipeBack.mp3";
+const SND_INVALID = "Assets/Sounds/sndInvalid.mp3";
+const SND_SCORE_UP = "Assets/Sounds/sndScoreUp.mp3";
+
+function playSound(src, volume = 1.0) {
+    let audio = new Audio(src);
+    audio.volume = volume;
+    audio.play();
+}
 
 const themes = {
     Videogiochi: [
@@ -63,14 +78,12 @@ const themes = {
         "Temi/Scuola/macchiavelli.jpg",
         "Temi/Scuola/napoleone.jpg",
         "Temi/Scuola/newton.jpg"
-    ]
+    ],
 };
 
 let cards = [];
 let selectedCards = [];
 let selectedTheme = themes.Videogiochi;
-let SCORE_PER_CARD = 25;
-let score = 0;
 
 class Card {
     constructor(img) {
@@ -79,32 +92,52 @@ class Card {
     }
 }
 
+const Themes = Object.freeze({
+   ALBUMS: "Albums",
+   ANIME: "Anime",
+   CARTONI: "Cartoni",
+   CIBO: "Cibo",
+   SCUOLA: "Scuola",
+   VIDEOGIOCHI: "Videogiochi",
+});
+
+function restartGame() {
+    alert("Da implementare....");
+}
+
 function chooseTheme() {
     let selections = document.getElementById("themeSelect");
     let selection = selections.value;
 
-    if (selection == "Albums") {
-        selectedTheme = themes.Albums;
-    } else if (selection == "Anime") {
-        selectedTheme = themes.Anime;
-    } else if (selection == "Cartoni") {
-        selectedTheme = themes.Cartoni;
-    } else if (selection == "Cibo") {
-        selectedTheme = themes.Cibo;
-    } else if (selection == "Scuola") {
-        selectedTheme = themes.Scuola;
-    } else if (selection == "Videogiochi") {
-        selectedTheme = themes.Videogiochi;
+    switch (selection) {
+        case Themes.ALBUMS: selectedTheme = themes.Albums; break;
+        case Themes.ANIME: selectedTheme = themes.Anime; break;
+        case Themes.CARTONI: selectedTheme = themes.Cartoni; break;
+        case Themes.CIBO: selectedTheme = themes.Cibo; break;
+        case Themes.SCUOLA: selectedTheme = themes.Scuola; break;
+        case Themes.VIDEOGIOCHI: selectedTheme = themes.Videogiochi; break;
     }
 
     alert("Tema " + selection + " perfettamente impostato!");
-
-   loadCards();
-   createCards();
+    loadCards();
+    createCards();
 }
+
+/*
+
+    QUANDO SI SVUOTA LA LISTA DI CARTE,
+    LA TABELLA RESTA ANCORA CON LE INFORMAZIONI DI PRIMA.
+    BISOGNA MODIFICARE .innerHTML della GRIGLIA per
+    SVUOTARLA EFFETTIVAMENTE.
+
+*/
 
 function emptyLoadedCards() {
     cards = [];
+}
+
+function emptyCardGrid() {
+
 }
 
 function insertCardCouple(card) {
@@ -112,8 +145,20 @@ function insertCardCouple(card) {
     cards.push(new Card(card));
 }
 
+/*
+    QUANDO SI MODIFICA LA L'ARRAY DI CARTE,
+    BISOGNA ANCHE MODIFICARE LA GRIGLIA.
+    L'ARRAY SI RESETTA, MA LE INFORMAZIONI DELLA GRIGLIA
+    RIMANGONO INVARIATE.
+    fare domani (oggi)
+*/
+
 function rearrangeCards() {
     cards.sort(() => Math.random() - 0.5);
+}
+
+function rearrangeGrid() {
+
 }
 
 function loadCards() {
@@ -147,6 +192,7 @@ function hideCardCouple(cardElements, c1, c2, delay = 500) {
     setTimeout(() => {
         cardElements[c1.index].classList.remove("flipped");
         cardElements[c2.index].classList.remove("flipped");
+        playSound(SND_CARD_SWIPE_BACK, VOLUME);
     }, delay);
 }
 
@@ -162,6 +208,12 @@ function obtainPoints() {
     return SCORE_PER_CARD * 2;
 }
 
+function scoreUp(additionalScore = 0) {
+    playSound(SND_SCORE_UP, VOLUME);
+    score += obtainPoints() + additionalScore;
+    updateScoreLabel();
+}
+
 function updateScoreLabel() {
     document.getElementById("scoreLabel").textContent = `Punteggio: ${score}`;
 }
@@ -171,9 +223,14 @@ function selectCard(index) {
     let cardElements = document.querySelectorAll(".card");
     let cardEl = cardElements[index];
 
-    if (cardIsFlipped(cardEl)) return;
+    if (cardIsFlipped(cardEl)) {
+        playSound(SND_INVALID, VOLUME);
+        return;
+    }
 
     cardEl.classList.add("flipped");
+
+    playSound(SND_CARD_SWIPE, VOLUME);
 
     selectedCards.push({ index, card: cards[index] });
 
@@ -185,11 +242,9 @@ function selectCard(index) {
         if (cardsAreEquals(a, b)) {
             cards[a.index].found = true;
             cards[b.index].found = true;
-            score += obtainPoints();
-            updateScoreLabel();
+            scoreUp();
         } else hideCardCouple(cardElements, a, b);
 
         selectedCards = [];
     }
 }
-
