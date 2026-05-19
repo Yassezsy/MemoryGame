@@ -4,7 +4,8 @@ const GRIDS_N = ROWS * COLS;
 
 const CARD_GRID = document.getElementById("card_grid");
 
-let SCORE_PER_CARD = 25;
+let SCORE_ADDITIONAL_PER_CARD_RANGE = 50; 
+let SCORE_PER_CARD = 25 + Math.floor(Math.random() * SCORE_ADDITIONAL_PER_CARD_RANGE);
 let score = 0;
 
 const VOLUME = 0.2;
@@ -19,6 +20,8 @@ function playSound(src, volume = 1.0) {
     audio.volume = volume;
     audio.play();
 }
+
+
 
 const themes = {
     Videogiochi: [
@@ -107,6 +110,7 @@ function restartGame() {
     emptyLoadedCards();
     emptyCardGrid();
 
+    resetScore();
     loadCards();
     createCards();
 }
@@ -129,15 +133,6 @@ function chooseTheme() {
     createCards();
 }
 
-/*
-
-    QUANDO SI SVUOTA LA LISTA DI CARTE,
-    LA TABELLA RESTA ANCORA CON LE INFORMAZIONI DI PRIMA.
-    BISOGNA MODIFICARE .innerHTML della GRIGLIA per
-    SVUOTARLA EFFETTIVAMENTE.
-
-*/
-
 function emptyLoadedCards() {
     cards = [];
 }
@@ -150,14 +145,6 @@ function insertCardCouple(card) {
     cards.push(new Card(card));
     cards.push(new Card(card));
 }
-
-/*
-    QUANDO SI MODIFICA LA L'ARRAY DI CARTE,
-    BISOGNA ANCHE MODIFICARE LA GRIGLIA.
-    L'ARRAY SI RESETTA, MA LE INFORMAZIONI DELLA GRIGLIA
-    RIMANGONO INVARIATE.
-    fare domani (oggi)
-*/
 
 function rearrangeCards() {
     cards.sort(() => Math.random() - 0.5);
@@ -176,7 +163,7 @@ function loadCards() {
 
 function setUpGrid() {
     cards.forEach((card, index) => {
-        grid.innerHTML += `
+        CARD_GRID.innerHTML += `
             <div class="card" onclick="selectCard(${index})">
                 <div class="inner">
                     <img class="front" src="Assets/back_card.jpg">
@@ -210,6 +197,11 @@ function cardsAreEquals(card1, card2) {
 
 function obtainPoints() {
     return SCORE_PER_CARD * 2;
+}
+
+function resetScore() {
+    score = 0;
+    updateScoreLabel();
 }
 
 function scoreUp(additionalScore = 0) {

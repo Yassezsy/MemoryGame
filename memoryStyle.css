@@ -1,3 +1,16 @@
+:root {
+    --purple-fucsia-gradent: 
+        linear-gradient(135deg, #f952ff 0%, #3B82F6 100%);
+    --dark-green-gradient: 
+        linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    --aqua-gradient: 
+        linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+    --warm-gradient: 
+        linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    --green-gradient:
+        linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+}
+
 body {
     margin: 0;
     height: 100vh;
@@ -7,6 +20,12 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+@media (max-width: 700px) {
+    #card_grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 .background {
@@ -21,7 +40,7 @@ body {
     transform: scale(1.1);
 
     z-index: -1;
-    background: linear-gradient(135deg, #f952ff 0%, #3B82F6 100%);
+    background: var(--warm-gradient);
 }
 
 .score {
