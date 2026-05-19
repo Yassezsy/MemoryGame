@@ -2,6 +2,8 @@ const ROWS = 4;
 const COLS = 4;
 const GRIDS_N = ROWS * COLS;
 
+const CARD_GRID = document.getElementById("card_grid");
+
 let SCORE_PER_CARD = 25;
 let score = 0;
 
@@ -173,8 +175,7 @@ function loadCards() {
 }
 
 function createCards() {
-    const grid = document.getElementById("card_grid");
-    grid.innerHTML = "";
+    CARD_GRID.innerHTML = "";
 
     cards.forEach((card, index) => {
         grid.innerHTML += `
