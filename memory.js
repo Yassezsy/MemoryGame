@@ -104,7 +104,11 @@ const Themes = Object.freeze({
 });
 
 function restartGame() {
-    alert("Da implementare....");
+    emptyLoadedCards();
+    emptyCardGrid();
+
+    loadCards();
+    createCards();
 }
 
 function chooseTheme() {
@@ -139,7 +143,7 @@ function emptyLoadedCards() {
 }
 
 function emptyCardGrid() {
-
+    CARD_GRID.innerHTML = "";
 }
 
 function insertCardCouple(card) {
@@ -159,10 +163,6 @@ function rearrangeCards() {
     cards.sort(() => Math.random() - 0.5);
 }
 
-function rearrangeGrid() {
-
-}
-
 function loadCards() {
     emptyLoadedCards();
 
@@ -174,9 +174,7 @@ function loadCards() {
     rearrangeCards();
 }
 
-function createCards() {
-    CARD_GRID.innerHTML = "";
-
+function setUpGrid() {
     cards.forEach((card, index) => {
         grid.innerHTML += `
             <div class="card" onclick="selectCard(${index})">
@@ -187,6 +185,11 @@ function createCards() {
             </div>
         `;
     });
+}
+
+function createCards() {
+    CARD_GRID.innerHTML = "";
+    setUpGrid();
 }
 
 function hideCardCouple(cardElements, c1, c2, delay = 500) {
