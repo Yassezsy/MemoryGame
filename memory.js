@@ -22,6 +22,10 @@ function playSound(src, volume = 1.0) {
     audio.play();
 }
 
+function getIRandom(max) {
+    return Math.floor(Math.random() * max);
+}
+
 const themes = {
     Videogiochi: [
         "Temi/Videogiochi/brawl_stars.jpg",
@@ -109,9 +113,31 @@ function restartGame() {
     emptyLoadedCards();
     emptyCardGrid();
 
+    changeGradient();
     resetScore();
     loadCards();
     createCards();
+}
+
+function changeGradient() {
+    const bg = document.querySelector(".background");
+    const btn = document.querySelector(".btn");
+    const sel = document.querySelector(".selectThemeBox");
+
+    const gradients = [
+        "var(--purple-fucsia-gradent)",
+        "var(--dark-green-gradient)",
+        "var(--aqua-gradient)",
+        "var(--warm-gradient)",
+        "var(--green-gradient)",
+    ];
+
+    let index = getIRandom(gradients.length);
+    let newGradient = gradients[index];
+
+    bg.style.setProperty("--selected-gradient", newGradient);
+    btn.style.setProperty("--selected-gradient", newGradient);
+    sel.style.setProperty("--selected-gradient", newGradient);
 }
 
 function createSelectOptionRow(value, txt) {
@@ -172,12 +198,10 @@ function rearrangeCards() {
 
 function loadCards() {
     emptyLoadedCards();
-
     for (let i = 0; i < GRIDS_N / 2; i++) {
         let img = selectedTheme[i];
         insertCardCouple(img);
     }
-
     rearrangeCards();
 }
 
