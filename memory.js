@@ -3,6 +3,7 @@ const COLS = 4;
 const GRIDS_N = ROWS * COLS;
 
 const CARD_GRID = document.getElementById("card_grid");
+const THEME_SELECT = document.getElementById("themeSelect");
 
 let SCORE_ADDITIONAL_PER_CARD_RANGE = 50; 
 let SCORE_PER_CARD = 25 + Math.floor(Math.random() * SCORE_ADDITIONAL_PER_CARD_RANGE);
@@ -20,8 +21,6 @@ function playSound(src, volume = 1.0) {
     audio.volume = volume;
     audio.play();
 }
-
-
 
 const themes = {
     Videogiochi: [
@@ -113,6 +112,19 @@ function restartGame() {
     resetScore();
     loadCards();
     createCards();
+}
+
+function createSelectOptionRow(value, txt) {
+    return '<option value="' + value + '"> ' + txt + ' </option>';
+}
+
+function initThemeSelect() {
+    let contents = '<option value="">SCEGLI IL TUO TEMA</option>';
+    for (const theme in Themes) {
+        let name = Themes[theme];
+        contents += createSelectOptionRow(name, name);
+    }
+    THEME_SELECT.innerHTML = contents;
 }
 
 function chooseTheme() {
@@ -244,3 +256,5 @@ function selectCard(index) {
         selectedCards = [];
     }
 }
+
+initThemeSelect();
