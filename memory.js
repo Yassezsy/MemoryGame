@@ -156,7 +156,7 @@ function initThemeSelect() {
 function playMusic() {
   const music = document.getElementById("bgmusic");
   
-  music.volume = 0.2; 
+  music.volume = VOLUME * 2; 
   music.play();
 }
 
