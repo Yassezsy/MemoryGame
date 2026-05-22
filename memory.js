@@ -58,14 +58,14 @@ const themes = {
         "Temi/Cartoni/teen_titans.jpg"
     ],
     Cibo: [
-            "Temi/Cibo/burger.jpg",
-            "Temi/Cibo/carbonara.jpg",
-            "Temi/Cibo/chocolate_strawberry.jpg",
-            "Temi/Cibo/cous_cous.jpg",
-            "Temi/Cibo/lasagne.jpg",
-            "Temi/Cibo/pizza.jpg",
-            "Temi/Cibo/sushi.jpg",
-            "Temi/Cibo/tiramisu.jpg"
+        "Temi/Cibo/burger.jpg",
+        "Temi/Cibo/carbonara.jpg",
+        "Temi/Cibo/chocolate_strawberry.jpg",
+        "Temi/Cibo/cous_cous.jpg",
+        "Temi/Cibo/lasagne.jpg",
+        "Temi/Cibo/pizza.jpg",
+        "Temi/Cibo/sushi.jpg",
+        "Temi/Cibo/tiramisu.jpg"
     ],
     Albums: [
         "Temi/Albums/central_cee.jpg",
