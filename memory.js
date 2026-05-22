@@ -1,33 +1,22 @@
+/* ============================================= */
+/* ----------------- CONSTANTS ----------------- */
+/* ============================================= */
 const ROWS = 4;
 const COLS = 4;
 const GRIDS_N = ROWS * COLS;
 
 const CARD_GRID = document.getElementById("card_grid");
 const THEME_SELECT = document.getElementById("themeSelect");
+const BACK_GROUND_1 = document.querySelector(".bg1");
+const BACK_GROUND_2 = document.querySelector(".bg2");
 
-let SCORE_ADDITIONAL_PER_CARD_RANGE = 50; 
+const SHOW_HIDE_CARDS_DELAY = 2000;
+
+const SCORE_ADDITIONAL_PER_CARD_RANGE = 50;
 let SCORE_PER_CARD = 25 + Math.floor(Math.random() * SCORE_ADDITIONAL_PER_CARD_RANGE);
-let score = 0;
-
-const VOLUME = 0.2;
-
-const SND_CARD_SWIPE = "Assets/Sounds/sndCardSwipe.mp3";
-const SND_CARD_SWIPE_BACK = "Assets/Sounds/sndCardSwipeBack.mp3";
-const SND_INVALID = "Assets/Sounds/sndInvalid.mp3";
-const SND_SCORE_UP = "Assets/Sounds/sndScoreUp.mp3";
-
-function playSound(src, volume = 1.0) {
-    let audio = new Audio(src);
-    audio.volume = volume;
-    audio.play();
-}
-
-function getIRandom(max) {
-    return Math.floor(Math.random() * max);
-}
 
 const themes = {
-    Videogiochi: [
+    Videogames: [
         "Temi/Videogiochi/brawl_stars.jpg",
         "Temi/Videogiochi/fortnite.jpg",
         "Temi/Videogiochi/moco.jpg",
@@ -47,7 +36,7 @@ const themes = {
         "Temi/Anime/lain.jpg",
         "Temi/Anime/naruto.jpg"
     ],
-    Cartoni: [
+    Cartoons: [
         "Temi/Cartoni/bluey.jpg",
         "Temi/Cartoni/doraemon.jpg",
         "Temi/Cartoni/puffi.jpg",
@@ -57,7 +46,7 @@ const themes = {
         "Temi/Cartoni/spongebob.jpg",
         "Temi/Cartoni/teen_titans.jpg"
     ],
-    Cibo: [
+    Food: [
         "Temi/Cibo/burger.jpg",
         "Temi/Cibo/carbonara.jpg",
         "Temi/Cibo/chocolate_strawberry.jpg",
@@ -77,7 +66,7 @@ const themes = {
         "Temi/Albums/scorpion.jpg",
         "Temi/Albums/un_verano.png"
     ],
-    Scuola: [
+    School: [
         "Temi/Scuola/cartesio.jpg",
         "Temi/Scuola/goldoni.jpg",
         "Temi/Scuola/hopital.jpg",
@@ -87,12 +76,88 @@ const themes = {
         "Temi/Scuola/napoleone.jpg",
         "Temi/Scuola/newton.jpg"
     ],
+    Series: [
+        "Temi/Series/boys.jpg",
+        "Temi/Series/breaking_good.jpg",
+        "Temi/Series/call_saul.jpg",
+        "Temi/Series/from.jpg",
+        "Temi/Series/neve.jpg",
+        "Temi/Series/prison_break.jpg",
+        "Temi/Series/text_her.jpg",
+        "Temi/Series/twd.jpg",
+    ]
 };
+const Themes = Object.freeze({
+   ALBUMS: "Albums",
+   ANIME: "Anime",
+   CARTOONS: "Cartoons",
+   FOOD: "Food",
+   SCHOOL: "School",
+   VIDEOGAMES: "Videogames",
+   SERIES: "Series"
+});
+const gradients = [
+    "var(--purple-fucsia-gradent)",
+    "var(--dark-green-gradient)",
+    "var(--aqua-gradient)",
+    "var(--warm-gradient)",
+    "var(--green-gradient)",
+    "var(--cyber-blue-purple)",
+    "var(--candy-pop)",
+    "var(--purple-night)",
+    "var(--electric-green)",
+    "var(--fire-red)",
+    "var(--blood-red)",
+    "var(--cyber-red)",
+];
 
+function getIRandom(max) { return Math.floor(Math.random() * max); }
+
+/* ============================================== */
+/* ----------------- GAME STATE ----------------- */
+/* ============================================== */
 let cards = [];
 let selectedCards = [];
-let selectedTheme = themes.Videogiochi;
+let selectedTheme = themes.Videogames;
+let activeBg = 1;
+let streak = 0;
+let score = 0;
+gameStarted = false;
+let selectedGradient = gradients[0];
 
+function shakePage(duration = 400) {
+    document.body.classList.add("shake");
+    setTimeout(() => {
+        document.body.classList.remove("shake");
+    }, duration);
+}
+
+/* ============================================== */
+/* -------------------- AUDIO ------------------- */
+/* ============================================== */
+const VOLUME = 0.2;
+
+const SND_CARD_SWIPE = "Assets/Sounds/sndCardSwipe.mp3";
+const SND_CARD_SWIPE_BACK = "Assets/Sounds/sndCardSwipeBack.mp3";
+const SND_INVALID = "Assets/Sounds/sndInvalid.mp3";
+const SND_SCORE_UP = "Assets/Sounds/sndScoreUp.mp3";
+const SND_STREAK_UP = "Assets/Sounds/sndStreakSound.mp3";
+
+function playSound(src, volume = 1.0) {
+    let audio = new Audio(src);
+    audio.volume = volume;
+    audio.play();
+}
+function playMusic() {
+  const music = document.getElementById("bgmusic");
+
+  music.volume = VOLUME * 2;
+  music.play();
+}
+
+/* ============================================== */
+/* ----------------- GAME LOGIC ----------------- */
+/* ============================================== */
 class Card {
     constructor(img) {
         this.img = img;
@@ -100,64 +165,69 @@ class Card {
     }
 }
 
-const Themes = Object.freeze({
-   ALBUMS: "Albums",
-   ANIME: "Anime",
-   CARTONI: "Cartoni",
-   CIBO: "Cibo",
-   SCUOLA: "Scuola",
-   VIDEOGIOCHI: "Videogiochi",
-});
+function hideBg(bg) { bg.style.opacity = 0; }
+function showBg(bg) { bg.style.opacity = 1; }
+function setNewBgGradient(bg, gradient, show = true) {
+    bg.style.background = gradient;
+    if (show) showBg(bg);
+}
+function changeGradient() {
+    const btn = document.querySelector(".btn");
+    const sel = document.querySelector(".selectThemeBox");
 
+    let prevGradient = selectedGradient;
+    let newGradient;
+
+    do {
+        newGradient = gradients[getIRandom(gradients.length)];
+    } while (newGradient === prevGradient);
+
+    selectedGradient = newGradient;
+
+    if (activeBg === 1) {
+        setNewBgGradient(BACK_GROUND_2, newGradient);
+        hideBg(BACK_GROUND_1);
+        activeBg = 2;
+    } else {
+        setNewBgGradient(BACK_GROUND_1, newGradient);
+        hideBg(BACK_GROUND_2);
+        activeBg = 1;
+    }
+
+    btn.style.setProperty("--selected-gradient", newGradient);
+    sel.style.setProperty("--selected-gradient", newGradient);
+}
+function initThemeSelect() {
+    let contents = '<option value="">CHOOSE A THEME</option>';
+    for (const theme in Themes) {
+        let name = Themes[theme];
+        contents += createSelectOptionRow(name, name); //<option> + show txt
+    }
+    THEME_SELECT.innerHTML = contents;
+}
 function restartGame() {
+
+    if (gameStarted == false) alert("Cannot restart game. The game hasn't started yet.")
+
     emptyLoadedCards();
     emptyCardGrid();
 
     changeGradient();
+    resetStreak();
     resetScore();
     loadCards();
+    createCards(); //Put cards in the grid
+    showAllCards();
+    hideAllCards(SHOW_HIDE_CARDS_DELAY);
+}
+
+function startGame() {
+    if (gameStarted == false) gameStarted = true;
+    loadCards();
     createCards();
-}
-
-function changeGradient() {
-    const bg = document.querySelector(".background");
-    const btn = document.querySelector(".btn");
-    const sel = document.querySelector(".selectThemeBox");
-
-    const gradients = [
-        "var(--purple-fucsia-gradent)",
-        "var(--dark-green-gradient)",
-        "var(--aqua-gradient)",
-        "var(--warm-gradient)",
-        "var(--green-gradient)",
-    ];
-
-    let index = getIRandom(gradients.length);
-    let newGradient = gradients[index];
-
-    bg.style.setProperty("--selected-gradient", newGradient);
-    btn.style.setProperty("--selected-gradient", newGradient);
-    sel.style.setProperty("--selected-gradient", newGradient);
-}
-
-function createSelectOptionRow(value, txt) {
-    return '<option value="' + value + '"> ' + txt + ' </option>';
-}
-
-function initThemeSelect() {
-    let contents = '<option value="">SCEGLI IL TUO TEMA</option>';
-    for (const theme in Themes) {
-        let name = Themes[theme];
-        contents += createSelectOptionRow(name, name);
-    }
-    THEME_SELECT.innerHTML = contents;
-}
-
-function playMusic() {
-  const music = document.getElementById("bgmusic");
-  
-  music.volume = VOLUME * 2; 
-  music.play();
+    showAllCards();
+    hideAllCards(SHOW_HIDE_CARDS_DELAY);
+    playMusic();
 }
 
 function chooseTheme() {
@@ -167,35 +237,23 @@ function chooseTheme() {
     switch (selection) {
         case Themes.ALBUMS: selectedTheme = themes.Albums; break;
         case Themes.ANIME: selectedTheme = themes.Anime; break;
-        case Themes.CARTONI: selectedTheme = themes.Cartoni; break;
-        case Themes.CIBO: selectedTheme = themes.Cibo; break;
-        case Themes.SCUOLA: selectedTheme = themes.Scuola; break;
-        case Themes.VIDEOGIOCHI: selectedTheme = themes.Videogiochi; break;
+        case Themes.CARTOONS: selectedTheme = themes.Cartoons; break;
+        case Themes.FOOD: selectedTheme = themes.Food; break;
+        case Themes.SCHOOL: selectedTheme = themes.School; break;
+        case Themes.VIDEOGAMES: selectedTheme = themes.Videogames; break;
+        case Themes.SERIES: selectedTheme = themes.Series; break;
     }
-
-    alert("Tema " + selection + " perfettamente impostato!");
-    loadCards();
-    createCards();
-    playMusic();
+    alert("Theme " + selection + " successfully set!");
+    startGame();
 }
-
-function emptyLoadedCards() {
-    cards = [];
-}
-
-function emptyCardGrid() {
-    CARD_GRID.innerHTML = "";
-}
-
+function emptyLoadedCards() { cards = []; }
+function emptyCardGrid() { CARD_GRID.innerHTML = ""; }
 function insertCardCouple(card) {
     cards.push(new Card(card));
     cards.push(new Card(card));
 }
 
-function rearrangeCards() {
-    cards.sort(() => Math.random() - 0.5);
-}
-
+function rearrangeCards() { cards.sort(() => Math.random() - 0.5); }
 function loadCards() {
     emptyLoadedCards();
     for (let i = 0; i < GRIDS_N / 2; i++) {
@@ -204,7 +262,6 @@ function loadCards() {
     }
     rearrangeCards();
 }
-
 function setUpGrid() {
     cards.forEach((card, index) => {
         CARD_GRID.innerHTML += `
@@ -217,12 +274,24 @@ function setUpGrid() {
         `;
     });
 }
-
 function createCards() {
-    CARD_GRID.innerHTML = "";
+    emptyCardGrid();
     setUpGrid();
 }
 
+function showAllCards() {
+    const cards = document.querySelectorAll(".card");
+    cards.forEach(card => { flipCard(card); });
+}
+function hideAllCards(delay = 500) {
+    const cards = document.querySelectorAll(".card");
+    setTimeout(() => {
+        cards.forEach(card => {
+            card.classList.remove("flipped");
+        });
+     playSound(SND_CARD_SWIPE_BACK, VOLUME);
+    }, delay);
+}
 function hideCardCouple(cardElements, c1, c2, delay = 500) {
     setTimeout(() => {
         cardElements[c1.index].classList.remove("flipped");
@@ -230,71 +299,61 @@ function hideCardCouple(cardElements, c1, c2, delay = 500) {
         playSound(SND_CARD_SWIPE_BACK, VOLUME);
     }, delay);
 }
+function flipCard(card) { card.classList.add("flipped"); }
 
-function cardIsFlipped(card) {
-    return card.classList.contains("flipped");
-}
-
-function cardsAreEquals(card1, card2) {
-    return cards[card1.index].img === cards[card2.index].img;
-}
-
-function obtainPoints() {
-    return SCORE_PER_CARD * 2;
-}
-
+function cardIsFlipped(card) { return card.classList.contains("flipped"); }
+function cardsAreEquals(card1, card2) { return cards[card1.index].img === cards[card2.index].img; }
+function obtainPoints() { return SCORE_PER_CARD * 2; }
 function resetScore() {
     score = 0;
     updateScoreLabel();
 }
 
+function updateScoreLabel() { document.getElementById("scoreLabel").textContent = `Punteggio: ${score}`; }
+function streakFX() {
+    playSound(SND_STREAK_UP, VOLUME);
+    shakePage();
+}
 function scoreUp(additionalScore = 0) {
+    if (isOnStreak()) streakFX();
     playSound(SND_SCORE_UP, VOLUME);
     score += obtainPoints() + additionalScore;
     updateScoreLabel();
 }
+function isOnStreak() { return streak >= 1; }
 
-function updateScoreLabel() {
-    document.getElementById("scoreLabel").textContent = `Punteggio: ${score}`;
-}
-
+function resetStreak() { streak = 0; }
+function resetSelectedCards() { selectedCards = []; }
 function selectCard(index) {
-
     let cardElements = document.querySelectorAll(".card");
     let cardEl = cardElements[index];
 
     if (cardIsFlipped(cardEl)) {
         playSound(SND_INVALID, VOLUME);
+        shakePage(200);
         return;
     }
 
-    cardEl.classList.add("flipped");
-
+    flipCard(cardEl);
     playSound(SND_CARD_SWIPE, VOLUME);
-
     selectedCards.push({ index, card: cards[index] });
 
     if (selectedCards.length === 2) {
-
         let a = selectedCards[0];
         let b = selectedCards[1];
 
         if (cardsAreEquals(a, b)) {
             cards[a.index].found = true;
             cards[b.index].found = true;
-            scoreUp();
-        } else hideCardCouple(cardElements, a, b);
-
-        selectedCards = [];
+            scoreUp( getIRandom(500) * streak );
+            streak += 1;
+        } else {
+            hideCardCouple(cardElements, a, b);
+            resetStreak();
+        }
+        resetSelectedCards();
     }
 }
-
-
-
-
-
-
-
-
+function createSelectOptionRow(value, txt) { return '<option value="' + value + '"> ' + txt + ' </option>'; }
 
 initThemeSelect();
