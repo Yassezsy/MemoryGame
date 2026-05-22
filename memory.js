@@ -289,4 +289,12 @@ function selectCard(index) {
     }
 }
 
+
+
+
+
+
+
+
+
 initThemeSelect();

@@ -123,6 +123,37 @@ select option {
     font-weight: bold;
 }
 
+@media (max-width: 480px) {
+    #card_grid, .container {
+        width: 95% !important;
+        max-width: 340px;
+        margin: 10px auto !important;
+        padding: 5px;
+    }
+
+    .card {
+        max-width: 70px !important;
+        height: auto !important;
+    }
+
+    .selectThemeBox, .score {
+        font-size: 18px !important;
+        text-align: center;
+        display: block;
+        margin: 10px auto;
+    }
+
+    .btn {
+        width: 80% !important;
+        max-width: 250px;
+        padding: 12px !important;
+        font-size: 18px !important;
+        display: block;
+        margin: 15px auto !important;
+    }
+}
+
+
 .container {
     width: min(55vw, 450px);
     display: grid;
