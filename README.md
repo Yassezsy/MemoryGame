@@ -30,7 +30,7 @@ The project was developed with a **100% Responsive** design, optimized for both 
 
 1. Choose your favorite theme from the selection menu at the top.
 2. Click on two cards to flip them and reveal their content.
-3. If the images match, the cards stay face up and you earn points.
+3. If the images match, the cards stay faced up and you earn points.
 4. If they are different, they will flip back over: memorize their position!
 5. Find all the pairs in the fewest moves possible to complete the challenge.
 6. Click the **Restart** button to start a new game.

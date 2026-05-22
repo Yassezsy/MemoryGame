@@ -1,42 +1,52 @@
 :root {
-    --purple-fucsia-gradent: 
+    --purple-fucsia-gradent:
         linear-gradient(135deg, #f952ff 0%, #3B82F6 100%);
-    --dark-green-gradient: 
+
+    --dark-green-gradient:
         linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-    --aqua-gradient: 
+
+    --aqua-gradient:
         linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
-    --warm-gradient: 
+
+    --warm-gradient:
         linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+
     --green-gradient:
         linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-    --selected-gradient: var(--purple-fucsia-gradent);  
+
+    --selected-gradient: var(--purple-fucsia-gradent);
 }
 
+/* RESET */
+* {
+    box-sizing: border-box;
+}
+
+/* BODY */
 body {
     margin: 0;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    zoom:80%;
-    padding-top: 5%;
+    padding: 10px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    font-family: Arial, sans-serif;
 }
 
-@media (max-width: 700px) {
-    #card_grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
+/* BACKGROUND */
 .background {
     position: fixed;
     inset: 0;
 
-    background-color: lightyellow;
+    background: var(--selected-gradient);
+
     background-size: cover;
     background-position: center;
 
@@ -44,151 +54,121 @@ body {
     transform: scale(1.1);
 
     z-index: -1;
-
-    background: var(--selected-gradient);
 }
 
+/* SCORE */
 .score {
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin: 15px 0;
+
     font-size: 30px;
     color: white;
+    text-align: center;
 }
 
+/* SELECT BOX */
 .selectThemeBox {
-    position:relative;
-    width:280px;
+    position: relative;
+    width: 280px;
 }
 
+/* SELECT + BUTTON */
 .selectThemeBox select,
 .btn {
-    border:1px solid white;
-    outline:none;
+    border: 1px solid white;
+    outline: none;
 
-    border-radius:18px;
-    font-size:18px;
-    font-weight:bold;
+    border-radius: 18px;
 
-    color:white;
-    cursor:pointer;
-    appearance:none;
-    background:
+    font-size: 18px;
+    font-weight: bold;
 
-    linear-gradient(135deg, #f952ff 0%, #3B82F6 100%);
-    box-shadow:
-    0 0 20px rgba(59,130,246,0.5),
-    0 0 40px rgba(249,82,255,0.3);
-    transition:0.25s;
+    color: white;
+    cursor: pointer;
+
+    appearance: none;
 
     background: var(--selected-gradient);
+
+    box-shadow:
+        0 0 20px rgba(59,130,246,0.5),
+        0 0 40px rgba(249,82,255,0.3);
+
+    transition: 0.25s;
 }
 
+/* SELECT */
 .selectThemeBox select {
-    padding:15px 20px;
-    width:100%;
+    padding: 15px 20px;
+    width: 100%;
 }
 
+/* BUTTON */
 .btn {
-    margin: 20px;
-    padding: 5px;
+    margin: 15px 0;
+    padding: 10px;
+
     height: 50px;
     width: 300px;
 }
 
-.selectThemeBox select:hover, .selectThemeBox select:focus {
-    transform:scale(1.03);
+/* HOVER */
+.selectThemeBox select:hover,
+.selectThemeBox select:focus,
+.btn:hover {
+    transform: scale(1.03);
+
     box-shadow:
         0 0 25px rgba(59,130,246,0.8),
         0 0 50px rgba(249,82,255,0.5);
 }
 
-.selectThemeBox::after {
-    position:absolute;
-    right:18px;
-    top:50%;
-
-    transform:translateY(-50%);
-    color:white;
-    pointer-events:none;
-
-    font-size:14px;
-}
-
+/* SELECT OPTIONS */
 select option {
     background: #3B82F6;
     color: white;
-    text-align-last:center;
-
+    text-align: center;
     font-size: 16px;
     font-weight: bold;
 }
 
-@media (max-width: 480px) {
-    #card_grid, .container {
-        width: 95% !important;
-        max-width: 340px;
-        margin: 10px auto !important;
-        padding: 5px;
-    }
-
-    .card {
-        max-width: 70px !important;
-        height: auto !important;
-    }
-
-    .selectThemeBox, .score {
-        font-size: 18px !important;
-        text-align: center;
-        display: block;
-        margin: 10px auto;
-    }
-
-    .btn {
-        width: 80% !important;
-        max-width: 250px;
-        padding: 12px !important;
-        font-size: 18px !important;
-        display: block;
-        margin: 15px auto !important;
-    }
-}
-
-
+/* GAME CONTAINER */
 .container {
-    width: min(55vw, 450px);
+    width: 98vw;
+    max-width: 500px;
+
     display: grid;
     grid-template-columns: repeat(4, 1fr);
 
     gap: 10px;
     padding: 10px;
+
     background: rgba(255, 255, 255, 0.1);
 
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+
     border: 2px solid white;
-
     border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(255,255,255,0.3);
-    box-sizing: border-box;
 
-    
+    box-shadow: 0 8px 32px rgba(255,255,255,0.3);
 }
 
+/* CARD */
 .card {
     width: 100%;
-    aspect-ratio: 1 / 1.2;
-    perspective: 1000px;
+    aspect-ratio: 1 / 1;
 
+    perspective: 1000px;
     cursor: pointer;
-    border-color:white;
-    border: 2px #333;
 
     border-radius: 20px;
 }
 
+/* INNER FLIP */
 .inner {
     width: 100%;
     height: 100%;
+
     position: relative;
 
     transition: transform 0.5s;
@@ -199,18 +179,69 @@ select option {
     transform: rotateY(180deg);
 }
 
-.front, .back {
+/* FRONT / BACK */
+.front,
+.back {
     position: absolute;
     width: 100%;
     height: 100%;
 
     border-radius: 15px;
     border: 1px solid #333;
-    object-fit: cover;
 
+    object-fit: cover;
     backface-visibility: hidden;
 }
 
 .back {
     transform: rotateY(180deg);
+}
+
+/* TABLET */
+@media (max-width: 700px) {
+    .container {
+        grid-template-columns: repeat(2, 1fr);
+        width: 95vw;
+    }
+
+    .score {
+        font-size: 24px;
+    }
+
+    .btn {
+        width: 95%;
+    }
+}
+
+/* PHONE */
+@media (max-width: 480px) {
+
+    body {
+        padding: 8px;
+    }
+
+    .container {
+        width: 99vw;
+        gap: 6px;
+        padding: 6px;
+    }
+
+    .score {
+        font-size: 22px;
+    }
+
+    .btn {
+        width: 95%;
+        max-width: 320px;
+        font-size: 16px;
+    }
+
+    .selectThemeBox {
+        width: 95%;
+        max-width: 320px;
+    }
+
+    .selectThemeBox select {
+        font-size: 16px;
+    }
 }
