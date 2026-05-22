@@ -229,7 +229,6 @@ function startGame() {
     hideAllCards(SHOW_HIDE_CARDS_DELAY);
     playMusic();
 }
-
 function chooseTheme() {
     let selections = document.getElementById("themeSelect");
     let selection = selections.value;
