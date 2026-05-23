@@ -293,7 +293,9 @@ select option {
     -webkit-backdrop-filter: blur(20px);
     border: 2px solid white;
     border-radius: 20px;
+}
 
+.popup.show .popupContent {
     animation: popupSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
