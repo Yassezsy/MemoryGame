@@ -257,6 +257,11 @@ select option {
     .selectThemeBox select {
         font-size: 16px;
     }
+
+    .logo img {
+    width: 95%;
+    max-width: 320px;
+}
 }
 
 /* ============================================= */
