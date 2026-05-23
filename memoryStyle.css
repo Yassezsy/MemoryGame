@@ -266,15 +266,19 @@ select option {
 .popup {
     position: fixed;
     inset: 0;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     background: rgba(0,0,0,0.75);
     z-index: 999999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
 .popup.show {
-    display: flex;
+    opacity: 1;
+    pointer-events: auto;
     animation: popupFadeIn 0.3s ease forwards;
 }
 
