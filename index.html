@@ -25,15 +25,13 @@
     <div id="card_grid" class="container"></div>
 
     <button class="btn" onclick="restartGame()">Restart</button>
+    <!-- <button class="btn" onclick="showShowHideCardsPopUp()">Show/Hide</button> -->
 
     <div id="winPopup" class="popup">
-        <div class="popupContent">
-            <h1>🏆 Hai vinto!</h1>
-
+        <div id="popupIdContents" class="popupContent">
+            <h1 id="popUpLabel"></h1>
             <p id="popupScore"></p>
             <p id="popupTime"></p>
-
-            <button class="btn" onclick="restartGame()">Reset</button>
         </div>
     </div>
 

@@ -272,11 +272,6 @@ select option {
     background: rgba(0,0,0,0.75);
     z-index: 999999;
 }
-
-.popup.show {
-    display: flex;
-}
-
 .popupContent {
     width: 420px;
     padding: 25px;
@@ -288,10 +283,8 @@ select option {
     border: 2px solid white;
     border-radius: 20px;
 }
-
-.popup.show .popupContent {
-    animation: popupSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
+.popup.show { display: flex; }
+.popup.show .popupContent { animation: popupSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 
 @keyframes popupSlideUp {
     from { transform: translateY(30px) scale(0.95); opacity: 0; }

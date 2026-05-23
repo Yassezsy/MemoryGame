@@ -4,6 +4,8 @@
 const ROWS = 4;
 const COLS = 4;
 const GRIDS_N = ROWS * COLS;
+const POP_UP = document.getElementById("winPopup");
+const POP_UP_CONTENTS = document.getElementById("popupIdContents");
 
 const CARD_GRID = document.getElementById("card_grid");
 const THEME_SELECT = document.getElementById("themeSelect");
@@ -199,7 +201,6 @@ function changeGradient() {
     btn.style.setProperty("--selected-gradient", newGradient);
     sel.style.setProperty("--selected-gradient", newGradient);
 }
-
 function initThemeSelect() {
     let contents = '<option value="">SCEGLI UN TEMA</option>';
     for (const theme in Themes) {
@@ -209,13 +210,8 @@ function initThemeSelect() {
     THEME_SELECT.innerHTML = contents;
 }
 
-function restartGame() {
-    document.getElementById("winPopup").classList.remove("show");
-
-    if (!gameStarted) {
-        alert("Impossibile riavviare: la partita non è ancora iniziata.");
-        return;
-    }
+function goToGame() {
+    hidePopUp();
 
     emptyLoadedCards();
     emptyCardGrid();
@@ -228,19 +224,38 @@ function restartGame() {
     showAllCards();
     hideAllCards(SHOW_HIDE_CARDS_DELAY);
 
-    startTime = Date.now(); // FIX 4: reset del timer al restart
+    startTime = Date.now();
 }
+function restartGame() {
+    if (!gameStarted) {
+        createSimplePopUp("Alright", "Make sure to start a game first...");
+        return;
+    }
 
+    resetPopUpContents();
+
+    setPopupContents(`
+        <h1 id="popUpLabel"></h1>
+        <button class="btn" onclick="goToGame()">Cool!</button>
+    `);
+
+    showPopUp("Game Restarted!");
+}
+function showCards_DEBUG() {
+    hidePopUp();
+    showAllCards();
+    hideAllCards(SHOW_HIDE_CARDS_DELAY);
+}
 function startGame() {
     if (!gameStarted) gameStarted = true;
     startTime = Date.now(); // FIX 5: timer parte qui
+    hidePopUp();
     loadCards();
     createCards();
     showAllCards();
     hideAllCards(SHOW_HIDE_CARDS_DELAY);
     playMusic();
 }
-
 function chooseTheme() {
     let selections = document.getElementById("themeSelect");
     let selection = selections.value;
@@ -256,20 +271,16 @@ function chooseTheme() {
         case Themes.VIDEOGAMES: selectedTheme = themes.Videogames; break;
         case Themes.SERIES:     selectedTheme = themes.Series;     break;
     }
-    alert("Tema " + selection + " impostato!");
-    startGame();
-}
 
+    showSelectedThemePopUp("Theme<br>" + selection + "<br>succesfully set!");
+}
 function emptyLoadedCards()  { cards = []; }
 function emptyCardGrid()     { CARD_GRID.innerHTML = ""; }
-
 function insertCardCouple(card) {
     cards.push(new Card(card));
     cards.push(new Card(card));
 }
-
 function rearrangeCards() { cards.sort(() => Math.random() - 0.5); }
-
 function loadCards() {
     emptyLoadedCards();
     for (let i = 0; i < GRIDS_N / 2; i++) {
@@ -278,7 +289,6 @@ function loadCards() {
     }
     rearrangeCards();
 }
-
 function setUpGrid() {
     cards.forEach((card, index) => {
         CARD_GRID.innerHTML += `
@@ -291,17 +301,14 @@ function setUpGrid() {
         `;
     });
 }
-
 function createCards() {
     emptyCardGrid();
     setUpGrid();
 }
-
 function showAllCards() {
     const allCards = document.querySelectorAll(".card");
     allCards.forEach(card => { flipCard(card); });
 }
-
 function hideAllCards(delay = 500) {
     const allCards = document.querySelectorAll(".card");
     setTimeout(() => {
@@ -311,7 +318,6 @@ function hideAllCards(delay = 500) {
         playSound(SND_CARD_SWIPE_BACK, VOLUME);
     }, delay);
 }
-
 function hideCardCouple(cardElements, c1, c2, delay = 500) {
     setTimeout(() => {
         cardElements[c1.index].classList.remove("flipped");
@@ -319,19 +325,15 @@ function hideCardCouple(cardElements, c1, c2, delay = 500) {
         playSound(SND_CARD_SWIPE_BACK, VOLUME);
     }, delay);
 }
-
 function flipCard(card) { card.classList.add("flipped"); }
 function cardIsFlipped(card) { return card.classList.contains("flipped"); }
 function cardsAreEquals(card1, card2) { return cards[card1.index].img === cards[card2.index].img; }
 function obtainPoints() { return SCORE_PER_CARD * 2; }
-
 function resetScore() {
     score = 0;
     updateScoreLabel();
 }
-function updateScoreLabel() {
-    document.getElementById("scoreLabel").textContent = `Punteggio: ${score}`;
-}
+function updateScoreLabel() { document.getElementById("scoreLabel").textContent = `Punteggio: ${score}`; }
 function streakFX() {
     playSound(SND_STREAK_UP, VOLUME);
     shakePage();
@@ -345,20 +347,17 @@ function scoreUp(additionalScore = 0) {
 function isOnStreak()        { return streak >= 1; }
 function resetStreak()       { streak = 0; }
 function resetSelectedCards(){ selectedCards = []; }
-
 function selectCard(index) {
     let cardElements = document.querySelectorAll(".card");
     let cardEl = cardElements[index];
 
     if (!cards[index]) return;
 
-
     if (cardIsFlipped(cardEl) || cards[index].found) {
         playSound(SND_INVALID, VOLUME);
         shakePage(200);
         return;
     }
-
 
     if (selectedCards.length >= 2) return;
 
@@ -375,41 +374,85 @@ function selectCard(index) {
             cards[b.index].found = true;
             scoreUp( getIRandom(500) * streak );
             streak += 1;
+            checkWin();
         } else {
             hideCardCouple(cardElements, a, b);
             resetStreak();
         }
         resetSelectedCards();
-
-        setTimeout(() => {
-            checkWin();
-        }, 50);
     }
 }
-
-function createSelectOptionRow(value, txt) {
-    return '<option value="' + value + '"> ' + txt + ' </option>';
-}
-
+function createSelectOptionRow(value, txt) { return '<option value="' + value + '"> ' + txt + ' </option>'; }
 function checkWin() {
     if (cards.length === 0) return;
     let allFound = cards.every(c => c.found === true);
-    if (allFound) {
-        console.log("WIN!");
-        showWinPopup();
-    }
+    if (allFound) { showWinPopup(); }
 }
 
-function showWinPopup() {
-    const popup = document.getElementById("winPopup");
+/* ============================================== */
+/* ------------------ POP UP LOGIC -------------- */
+/* ============================================== */
+
+function resetPopUpContents() { POP_UP_CONTENTS.innerHTML = ""; }
+function setPopupContents(contents) { POP_UP_CONTENTS.innerHTML = contents; }
+function createSimplePopUp(label, msg) {
+    resetPopUpContents();
+    setPopupContents(`
+        <h1 id="popUpLabel"></h1>
+        <button class="btn" onclick="hidePopUp()">${label}</button>
+    `);
+
+    showPopUp(msg);
+}
+function showPopUp(label) {
+    POP_UP.classList.add("show");
+    document.getElementById("popUpLabel").innerHTML = label;
+}
+
+function showShowHideCardsPopUp() {
+    resetPopUpContents();
+
+    setPopupContents(`
+        <h1 id="popUpLabel"></h1>
+        <button class="btn" onclick="showCards_DEBUG()">Show/Hide</button>
+        <button class="btn" onclick="hidePopUp()">Do not</button>
+    `);
+
+    if (!gameStarted) {
+        createSimplePopUp("Alright", "Be sure to start a game first...");
+        return;
+    }
+
+    showPopUp("This will show all the cards. All the cards you found will be flipped as well...");
+}
+
+function hidePopUp() { POP_UP.classList.remove("show"); }
+function showSelectedThemePopUp(msg) {
+    resetPopUpContents();
+
+    setPopupContents(`
+        <h1 id="popUpLabel"></h1>
+        <button class="btn" onclick="startGame()">Start Game</button>
+    `);
+
+    showPopUp(msg);
+}
+function showWinPopup(winMsg = "🏆 You WON!") {
+    resetPopUpContents();
 
     let endTime = Date.now();
     let timeTaken = startTime ? Math.floor((endTime - startTime) / 1000) : 0;
+    setPopupContents(`
+        <h1 id="popUpLabel"></h1>
+        <p id="popupScore"></p>
+        <p id="popupTime"></p>
+        <button class="btn" onclick="restartGame()">Play Again</button>
+    `);
 
-    document.getElementById("popupScore").textContent = "Punteggio: " + score;
-    document.getElementById("popupTime").textContent  = "Tempo: " + timeTaken + "s";
+    document.getElementById("popupScore").textContent = "Score: " + score;
+    document.getElementById("popupTime").textContent  = "Time: " + timeTaken + "s";
 
-    popup.classList.add("show");
+    showPopUp(winMsg);
 }
 
 initThemeSelect();
