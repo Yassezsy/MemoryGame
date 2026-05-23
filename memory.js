@@ -260,7 +260,9 @@ function chooseTheme() {
     let selections = document.getElementById("themeSelect");
     let selection = selections.value;
 
-    if (!selection) return; // nessuna selezione valida
+    document.getElementById("logo").style.display = "none"; 
+
+    if (!selection) return; 
 
     switch (selection) {
         case Themes.ALBUMS:     selectedTheme = themes.Albums;     break;
