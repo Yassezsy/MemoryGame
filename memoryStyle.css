@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
+
 :root {
     --purple-fucsia-gradent:
         linear-gradient(135deg, #f952ff 0%, #3B82F6 100%);
@@ -56,7 +58,7 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
 
-    font-family: Arial, sans-serif;
+    font-family: 'Nunito', Arial, sans-serif;
 }
 
 /* ============================================= */
@@ -76,6 +78,7 @@ body {
 }
 .bg1 { opacity: 1; }
 .bg2 { opacity: 0; }
+
 /* ============================================= */
 /* ---------------- MAIN GRID ------------------ */
 /* ============================================= */
@@ -83,6 +86,7 @@ body {
     margin: 15px 0;
 
     font-size: 30px;
+    font-weight: 900;
     color: white;
     text-align: center;
 }
@@ -122,6 +126,7 @@ body {
 
     font-size: 18px;
     font-weight: bold;
+    font-family: 'Nunito', Arial, sans-serif;
 
     color: white;
     cursor: pointer;
@@ -252,4 +257,60 @@ select option {
     .selectThemeBox select {
         font-size: 16px;
     }
+}
+
+/* ============================================= */
+/* ---------------WINNER POP-UP----------------- */
+/* ============================================= */
+
+.popup {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.75);
+    z-index: 999999;
+}
+
+.popup.show {
+    display: flex;
+    animation: popupFadeIn 0.3s ease forwards;
+}
+
+@keyframes popupFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.popupContent {
+    width: 420px;
+    padding: 25px;
+    text-align: center;
+    color: white;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid white;
+    border-radius: 20px;
+
+    animation: popupSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes popupSlideUp {
+    from { transform: translateY(30px) scale(0.95); opacity: 0; }
+    to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+
+.popupContent h1 {
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.popupContent p {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    opacity: 0.9;
 }
