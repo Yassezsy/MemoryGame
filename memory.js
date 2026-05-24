@@ -236,10 +236,11 @@ function restartGame() {
 
     setPopupContents(`
         <h1 id="popUpLabel"></h1>
-        <button class="btn" onclick="goToGame()">Cool!</button>
+        <button class="btn" onclick="goToGame()">YES! Cool!</button>
+        <button class="btn" onclick="hidePopUp()">NO! Get me back!</button>
     `);
 
-    showPopUp("Game Restarted!");
+    showPopUp("Restart Game?");
 }
 function showCards_DEBUG() {
     hidePopUp();
