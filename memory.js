@@ -458,3 +458,8 @@ function showWinPopup(winMsg = "🏆 You WON!") {
 }
 
 initThemeSelect();
+
+window.addEventListener('beforeunload', () => {
+    const music = document.getElementById("bgmusic");
+    music.pause();
+});
